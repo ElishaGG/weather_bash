@@ -44,3 +44,20 @@ emoji=$(echo "$EMOJI_JSON" | jq -r ".emojis[\"$icon\"]" || echo "❓")
 
 # Outputting a message
 echo "Weather in $CITY: $emoji ${temp}°C"
+```
+
+## Example output
+
+```
+Weather in Moscow: ☀️ 4°C
+```
+
+## Reminder
+Don't forget to register the rights: 
+``` 
+chmod +x weather.sh
+```
+Run:
+``` 
+./weather.sh
+```
