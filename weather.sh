@@ -2,10 +2,13 @@
 
 # Parse IP
 IP=$(curl -s ifconfig.me)
+# This string can be used for remote servers instead of the default string
+# Just comment out the line above and uncomment the line below
+# IP=$(echo $SSH_CLIENT | awk '{print $1}')
 
 # API_Keys
-TOKEN=
-APPID=
+TOKEN= # ipinfo.io token
+APPID= # openweathermap.org API ID
 
 # Parse city and loc by IP
 JSON=$(curl -s "https://ipinfo.io/$IP?token=$TOKEN")

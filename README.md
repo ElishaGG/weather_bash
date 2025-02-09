@@ -16,6 +16,9 @@ A simple bash script to check the weather by IP address. Uses `ipinfo.io` for lo
 
 # Parse IP
 IP=$(curl -s ifconfig.me)
+# This string can be used for remote servers instead of the default string
+# Just comment out the line above and uncomment the line below
+# IP=$(echo $SSH_CLIENT | awk '{print $1}')
 
 # API_Keys
 TOKEN= # ipinfo.io token
