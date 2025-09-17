@@ -7,28 +7,24 @@ IP=$(curl -s ifconfig.me)
 # IP=$(echo $SSH_CLIENT | awk '{print $1}')
 
 # API_Keys
-TOKEN= # ipinfo.io token
 APPID= # openweathermap.org API ID
 
-# Parse city and loc by IP
-JSON=$(curl -s "https://ipinfo.io/$IP?token=$TOKEN")
+# Parse city and location by IP
+JSON=$(curl -s -k "http://ip-api.com/json/$IP")
 
-LON=$(echo "$JSON" | jq -r '.loc' | cut -d',' -f1)
-LAT=$(echo "$JSON" | jq -r '.loc' | cut -d',' -f2)
+LAT=$(echo "$JSON" | jq -r '.lat')
+LON=$(echo "$JSON" | jq -r '.lon')
 CITY=$(echo "$JSON" | jq -r '.city')
-COUNTRY=$(echo "$JSON" | jq -r '.country')
-
-# Encoding spaces for api link
-CITY_ENCODED=$(echo "$CITY" | sed 's/ /%20/g')
+COUNTRY=$(echo "$JSON" | jq -r '.countryCode')
 
 # [units=metric] Temperature. Unit Default: Kelvin, Metric: Celsius, Imperial: Fahrenheit
-WEATHER_DATA=$(curl -s "https://api.openweathermap.org/data/2.5/weather?lat=$LAT&lon=$LON&q=$CITY_ENCODED,$COUNTRY&units=metric&appid=$APPID")
+WEATHER_DATA=$(curl -s "https://api.openweathermap.org/data/2.5/weather?lat=$LAT&lon=$LON&units=metric&appid=$APPID")
 
 # JSON with emoji dictionary
 EMOJI_JSON='{"emojis":{"01d":"☀️","01n":"🌙","02d":"⛅","02n":"☁️","03d":"🌥️","03n":"🌥️","04d":"☁️","04n":"☁️","09d":"🌧️","09n":"🌧️","10d":"🌦️","10n":"🌦️","11d":"⛈️","11n":"⛈️","13d":"❄️","13n":"❄️","50d":"🌫️","50n":"🌫️"}}'
 
 # Parse temperature and icon
-temp=$(echo "$WEATHER_DATA" | jq -r '.main.temp | round')
+temp=$(echo "$WEATHER_DATA" | jq -r '.main.temp | tonumber | (. * 10 | round / 10)')
 icon=$(echo "$WEATHER_DATA" | jq -r '.weather[0].icon')
 
 # Emoji selection from dictionary
